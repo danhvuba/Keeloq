@@ -55,3 +55,60 @@ uint64_t Rotation_key(uint64_t key, int r)
     }
     return k;
 }
+
+bool Is_Pr(uint32_t P, uint32_t PP, int r)
+{
+    uint32_t x = pow(2, 32 - r) - 1;
+    if (((P >> r) ^ (PP & x)) == 0)
+    {
+        return true;
+    }
+    return false;
+}
+
+void Find_P(uint32_t data, uint64_t key, int r)
+{
+    int count = 0;
+    uint64_t kr = Rotation_key(key, r);
+
+    /// text------cipher (key)
+    uint32_t cipher_text = Keeloq_Encrypt(data, key);
+    // Print_(r);
+    // Print_bit(key);
+    // cout << "     key\n";
+    // Print_bit(kr);
+    // cout << "     key >>> " << r << "\n";
+    // cout << "\n  ";
+    // Print_(r);
+    // Print_bit(data);
+    // cout << "     ";
+    // Print_(r);
+    // Print_bit(cipher_text);
+    // cout << "\n  ";
+
+    ////// search   ----||P>>4   =?   F_4(P,key) ---> i=8
+    for (int i = 0; i < pow(2, r); i++)
+    {
+        ////// ----||P>>4
+        uint32_t P1 = (data >> r) ^ (i << (32 - r));
+        uint32_t E_kr_P1 = Keeloq_Encrypt(P1, kr);
+        if (Is_Pr(cipher_text, E_kr_P1, r))
+        {
+            count++;
+            // Print_bit(P1);
+            // Print_(r);
+            // cout << "     ";
+            // Print_bit(E_kr_P1);
+            // cout << "        i=" << i << "\n  ";
+        }
+    }
+    cout << count<<"  ";
+}
+
+void Print_(int r)
+{
+    for (int i = 0; i < r; i++)
+    {
+        cout << "_";
+    }
+}

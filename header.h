@@ -18,3 +18,6 @@ void Print_bit(uint64_t key);
 #define Rotation(key) ((key & 1) << 63) ^ (key >> 1)
 
 uint64_t Rotation_key(uint64_t key, int r);
+bool Is_Pr(uint32_t P, uint32_t PP,int r);
+void Find_P(uint32_t data, uint64_t key, int r);
+void Print_(int r);
